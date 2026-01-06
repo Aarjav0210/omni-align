@@ -1,10 +1,10 @@
-"""Needleman-Wunsch global alignment with affine gap penalties."""
+"""Needleman-Wunsch global alignment with affine gap penalties"""
 
 from typing import Tuple
 
 
 def needleman_wunsch(seq1: str, seq2: str, match: int = 0, mismatch: int = 4, gap_open: int = 6, gap_extend: int = 2, return_cells: bool = False) -> Tuple[int, str]:
-    """Global alignment with affine gaps."""
+    """Global alignment with affine gaps"""
     n, m = len(seq1), len(seq2)
     
     if n == 0 and m == 0:
@@ -70,8 +70,8 @@ def needleman_wunsch(seq1: str, seq2: str, match: int = 0, mismatch: int = 4, ga
                 best = min(cands_D, key=lambda x: x[0])
                 D[i][j], D_ptr[i][j] = best[0], best[1]
     
-    final = [(M[n][m], 'M'), (I[n][m], 'I'), (D[n][m], 'D')]
-    best_score, state = min(final, key=lambda x: x[0])
+    final_cands = [(M[n][m], 'M'), (I[n][m], 'I'), (D[n][m], 'D')]
+    best_score, state = min(final_cands, key=lambda x: x[0])
     
     path = []
     i, j = n, m
@@ -80,21 +80,21 @@ def needleman_wunsch(seq1: str, seq2: str, match: int = 0, mismatch: int = 4, ga
         if state == 'M':
             if M_ptr[i][j] is None:
                 break
-            prev, pi, pj = M_ptr[i][j]
+            prev, p_i, p_j = M_ptr[i][j]
             path.append('M' if seq1[i-1] == seq2[j-1] else 'X')
-            state, i, j = prev, pi, pj
+            state, i, j = prev, p_i, p_j
         elif state == 'I':
             if I_ptr[i][j] is None:
                 break
-            prev, pi, pj = I_ptr[i][j]
+            prev, p_i, p_j = I_ptr[i][j]
             path.append('I')
-            state, i, j = prev, pi, pj
+            state, i, j = prev, p_i, p_j
         elif state == 'D':
             if D_ptr[i][j] is None:
                 break
-            prev, pi, pj = D_ptr[i][j]
+            prev, p_i, p_j = D_ptr[i][j]
             path.append('D')
-            state, i, j = prev, pi, pj
+            state, i, j = prev, p_i, p_j
         else:
             break
     

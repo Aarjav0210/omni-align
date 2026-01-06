@@ -1,4 +1,4 @@
-"""Directed Acyclic Graph for MUM-based alignment."""
+"""Directed Acyclic Graph for MUM-based alignment"""
 
 from typing import List, Dict, Tuple, Optional, Any
 from dataclasses import dataclass
@@ -13,7 +13,7 @@ except ImportError:
 
 @dataclass
 class Node:
-    """Node in the MUM DAG."""
+    """Node in the MUM DAG"""
     id: Any
     mum: Optional[MUM] = None
     
@@ -40,7 +40,7 @@ class Node:
 
 @dataclass
 class Edge:
-    """Edge in the MUM DAG with alignment score."""
+    """Edge in the MUM DAG with alignment score"""
     source: Any
     target: Any
     weight: float = 0.0
@@ -57,11 +57,11 @@ class Edge:
 
 class DAG:
     """
-    DAG for MUM-based alignment.
+    DAG for MUM-based alignment
     
     Nodes: START, MUM indices, END
     Edge weights: alignment scores between gaps
-    Optimal path minimizes total score with MUM count as tiebreaker.
+    Optimal path minimizes total score with MUM count as tiebreaker
     """
     
     def __init__(self, transition_matrix: TransitionMatrix, seq1: str = None, seq2: str = None):
@@ -121,12 +121,12 @@ class DAG:
         gap_extend: int = 2,
         verbose: bool = False
     ) -> None:
-        """Compute alignment scores for all edges."""
+        """Compute alignment scores for all edges"""
         seq1 = seq1 or self.seq1
         seq2 = seq2 or self.seq2
         
         if seq1 is None or seq2 is None:
-            raise ValueError("Sequences required for edge weights")
+            raise ValueError("Sequences required for edge weights computation")
         
         self.seq1 = seq1
         self.seq2 = seq2
@@ -154,7 +154,7 @@ class DAG:
             print(f"  Computed weights for {len(self._edges)} edges")
     
     def topological_order(self) -> List[Any]:
-        """Return nodes in topological order using Kahn's algorithm."""
+        """Return nodes in topological order using Kahn's algorithm"""
         in_deg = {node_id: self.in_degree(node_id) for node_id in self._nodes}
         queue = [n for n, d in in_deg.items() if d == 0]
         result = []
@@ -171,8 +171,8 @@ class DAG:
     
     def optimal_path(self) -> Tuple[List[Any], int, int]:
         """
-        Find optimal path: minimize score, tiebreaker maximize MUMs.
-        Returns (path, score, num_mums).
+        Find optimal path: minimize score, tiebreaker maximize MUMs
+        Returns (path, score, num_mums)
         """
         if not self._weights_computed:
             raise ValueError("Call compute_edge_weights() first")
@@ -206,7 +206,7 @@ class DAG:
         return path, int(dist[END][0]), -dist[END][1]
     
     def longest_path(self) -> Tuple[List[Any], int]:
-        """Find path with most MUMs."""
+        """Find path with most MUMs"""
         topo = self.topological_order()
         dist = {n: (0, None) for n in self._nodes}
         
@@ -240,7 +240,7 @@ class DAG:
         use_positions: bool = False,
         scale: float = 0.5
     ) -> str:
-        """Generate DOT format for Graphviz visualization."""
+        """Generate DOT format for Graphviz visualization"""
         lines = ["digraph MUM_DAG {"]
         
         if use_positions:
@@ -252,13 +252,13 @@ class DAG:
         highlight_edges = set()
         if highlight_path:
             for i in range(len(highlight_path) - 1):
-                highlight_edges.add((highlight_path[i], highlight_path[i + 1]))
+                highlight_edges.add((highlight_path[i], highlight_path[i+1]))
         
         if use_positions and self.mums:
             max_p1 = max(m.pos1 for m in self.mums)
             max_p2 = max(m.pos2 for m in self.mums)
             end_x, end_y = (max_p1 + 10) * scale, (max_p2 + 10) * scale
-            lines.append(f'  START [shape=circle, style=filled, fillcolor=green, pos="{-2*scale},{-2*scale}!"];')
+            lines.append(f'  START [shape=circle, style=filled, fillcolor=green, pos="{-2 * scale},{-2 * scale}!"];')
             lines.append(f'  END [shape=circle, style=filled, fillcolor=red, pos="{end_x},{end_y}!"];')
         else:
             lines.append('  START [shape=circle, style=filled, fillcolor=green];')
@@ -303,7 +303,7 @@ def build_dag(
     gap_extend: int = 2,
     verbose: bool = False
 ) -> DAG:
-    """Build DAG from sequences with optional edge weight computation."""
+    """Build DAG from sequences with optional edge weight computation"""
     if verbose:
         print(f"Finding MUMs (min_length={min_length})...")
     

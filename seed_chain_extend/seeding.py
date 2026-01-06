@@ -1,4 +1,4 @@
-"""K-mer and minimizer seeding strategies."""
+"""K-mer and minimizer seeding strategies"""
 
 from dataclasses import dataclass
 from typing import List, Dict, Set, Tuple
@@ -7,7 +7,7 @@ from collections import defaultdict
 
 @dataclass
 class Seed:
-    """A seed match between two sequences."""
+    """A seed match between two sequences"""
     pos1: int
     pos2: int
     length: int
@@ -22,7 +22,7 @@ class Seed:
 
 
 def find_kmer_seeds(seq1: str, seq2: str, k: int = 11) -> List[Seed]:
-    """Find all k-mer matches between sequences."""
+    """Find all k-mer matches between sequences"""
     if k > len(seq1) or k > len(seq2):
         return []
     
@@ -41,7 +41,7 @@ def find_kmer_seeds(seq1: str, seq2: str, k: int = 11) -> List[Seed]:
 
 
 def find_minimizer_seeds(seq1: str, seq2: str, k: int = 11, w: int = 5) -> List[Seed]:
-    """Find minimizer-based seed matches."""
+    """Find minimizer-based seed matches"""
     if k > len(seq1) or k > len(seq2):
         return []
     
@@ -81,7 +81,7 @@ def find_minimizer_seeds(seq1: str, seq2: str, k: int = 11, w: int = 5) -> List[
 
 
 def filter_unique_seeds(seeds: List[Seed], seq1: str, seq2: str) -> List[Seed]:
-    """Keep only seeds that are unique in both sequences."""
+    """Keep only seeds that are unique in both sequences"""
     if not seeds:
         return []
     

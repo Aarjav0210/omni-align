@@ -1,4 +1,4 @@
-"""Chain extension using NW or WFA for gap alignment."""
+"""Chain extension using NW or WFA for gap alignment"""
 
 from dataclasses import dataclass
 from typing import List, Tuple
@@ -11,7 +11,7 @@ from wfa import wfa_align
 
 @dataclass
 class ExtensionResult:
-    """Result of chain extension."""
+    """Result of chain extension"""
     score: int
     cigar: str
     cells_visited: int
@@ -20,7 +20,7 @@ class ExtensionResult:
 
 
 def extend_chain(seq1: str, seq2: str, chain: Chain, use_wfa: bool = False) -> ExtensionResult:
-    """Extend chain by aligning gaps between seeds."""
+    """Extend chain by aligning gaps between seeds"""
     if not chain.seeds:
         if use_wfa:
             score, cigar, cells = wfa_align(seq1, seq2, return_cells=True)
@@ -77,7 +77,11 @@ def extend_chain(seq1: str, seq2: str, chain: Chain, use_wfa: bool = False) -> E
 
 
 def align_with_seeds(seq1: str, seq2: str, k: int = 4, use_wfa: bool = False, unique_only: bool = True) -> Tuple[ExtensionResult, int, int]:
-    """Full seed-chain-extend pipeline. Returns (result, seeds_found, seeds_in_chain)."""
+    """
+    Full seed-chain-extend pipeline
+    
+    Returns (result, seeds_found, seeds_in_chain)
+    """
     
     seeds = find_kmer_seeds(seq1, seq2, k=k)
     if unique_only:

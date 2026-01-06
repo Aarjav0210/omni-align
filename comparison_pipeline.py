@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Comparison pipeline for alignment methods."""
+"""Comparison pipeline for alignment methods"""
 
 import pandas as pd
 from omni_align import find_mums, build_dag, align_path
@@ -15,7 +15,7 @@ SEQ2 = 'CTCCGCATGATACCGTACGCAGCCGACATTTCCAGCGTTG'
 
 
 def run_pipeline(seq1: str, seq2: str, min_mum_length: int = 4, sce_k: int = 4):
-    """Run all alignment methods and return comparison results."""
+    """Run all alignment methods and return comparison results"""
     full_cells = len(seq1) * len(seq2)
     
     nw_score, _ = needleman_wunsch(seq1, seq2)
@@ -80,7 +80,7 @@ def run_pipeline(seq1: str, seq2: str, min_mum_length: int = 4, sce_k: int = 4):
 
 
 def get_mum_details(seq1: str, seq2: str, min_length: int = 4):
-    """Get details of MUMs found between sequences."""
+    """Get details of MUMs found between sequences"""
     mums = find_mums(seq1, seq2, min_length=min_length)
     data = []
     for i, m in enumerate(mums):

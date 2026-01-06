@@ -1,10 +1,15 @@
-"""Wavefront Alignment (WFA) with affine gap penalties."""
+"""Wavefront Alignment (WFA) with affine gap penalties"""
 
 from typing import Tuple, Dict, List
 
 
 class WavefrontAligner:
-    """WFA aligner. Offset i = position in seq1, j = i + k = position in seq2."""
+    """
+    WFA aligner
+    
+    Offset i = position in seq1
+    j = i + k = position in seq2
+    """
     
     def __init__(self, pattern: str, text: str, mismatch: int = 4, gap_open: int = 6, gap_extend: int = 2):
         self.P = pattern
@@ -23,7 +28,7 @@ class WavefrontAligner:
         self.cells_visited = 0
     
     def align(self) -> Tuple[int, str, int]:
-        """Returns (score, cigar, cells_visited)."""
+        """Returns (score, cigar, cells_visited)"""
         if self.N == 0 and self.M == 0:
             return 0, "", 0
         if self.N == 0:
@@ -241,7 +246,13 @@ class WavefrontAligner:
 
 
 def wfa_align(seq1: str, seq2: str, mismatch: int = 4, gap_open: int = 6, gap_extend: int = 2, return_cells: bool = False) -> Tuple[int, str]:
-    """WFA alignment. Returns (score, cigar) or (score, cigar, cells) if return_cells=True."""
+    """
+    WFA alignment
+    
+    Returns
+    - (score, cigar) if return_cells == False
+    - (score, cigar, cells) if return_cells == True
+    """
     aligner = WavefrontAligner(seq1, seq2, mismatch, gap_open, gap_extend)
     score, cigar, cells = aligner.align()
     if return_cells:

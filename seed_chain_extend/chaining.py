@@ -1,4 +1,4 @@
-"""Co-linear seed chaining using dynamic programming."""
+"""Co-linear seed chaining using dynamic programming"""
 
 from dataclasses import dataclass, field
 from typing import List
@@ -7,7 +7,7 @@ from .seeding import Seed
 
 @dataclass
 class Chain:
-    """A chain of co-linear seeds."""
+    """A chain of collinear seeds"""
     seeds: List[Seed] = field(default_factory=list)
     score: float = 0.0
     
@@ -17,12 +17,12 @@ class Chain:
 
 
 def can_chain(seed_i: Seed, seed_j: Seed) -> bool:
-    """Check if seed_j can follow seed_i (non-overlapping, co-linear)."""
+    """Check if seed_j can follow seed_i (non-overlapping, collinear)"""
     return seed_i.end1 <= seed_j.pos1 and seed_i.end2 <= seed_j.pos2
 
 
 def chain_seeds(seeds: List[Seed], gap_penalty: float = 0.1) -> List[Chain]:
-    """Chain seeds using DP. Returns list with best chain."""
+    """Chain seeds using DP. Returns list with best chain"""
     if not seeds:
         return []
     

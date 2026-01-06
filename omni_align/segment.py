@@ -1,4 +1,4 @@
-"""Segment extraction and alignment between MUM landmarks."""
+"""Segment extraction and alignment between MUM landmarks"""
 
 from typing import Tuple, Optional, Union, List, Dict, Any
 from dataclasses import dataclass
@@ -14,7 +14,7 @@ from wfa import wfa_align
 
 @dataclass
 class Segment:
-    """A segment of a sequence between two positions."""
+    """A segment of a sequence between two positions"""
     sequence: str
     start: int
     end: int
@@ -26,7 +26,7 @@ class Segment:
 
 @dataclass
 class AlignmentResult:
-    """Result of aligning two segments."""
+    """Result of aligning two segments"""
     score: int
     cigar: str
     seg1: Segment
@@ -35,14 +35,14 @@ class AlignmentResult:
 
 
 def segment(seq: str, start: int, end: int) -> Segment:
-    """Extract a segment from a sequence."""
+    """Extract a segment from a sequence"""
     start = max(0, start)
     end = min(len(seq), end)
     return Segment(sequence=seq[start:end], start=start, end=end)
 
 
 def get_gap_segments(seq1: str, seq2: str, mum_from: Optional[MUM], mum_to: Optional[MUM], from_is_start: bool = False, to_is_end: bool = False) -> Tuple[Segment, Segment]:
-    """Extract segments between two MUMs from both sequences."""
+    """Extract segments between two MUMs from both sequences"""
     n1, n2 = len(seq1), len(seq2)
     
     if from_is_start or mum_from is None:
@@ -59,7 +59,7 @@ def get_gap_segments(seq1: str, seq2: str, mum_from: Optional[MUM], mum_to: Opti
 
 
 def align_segments(seg1: Segment, seg2: Segment, use_wfa: bool = False, mismatch: int = 4, gap_open: int = 6, gap_extend: int = 2) -> AlignmentResult:
-    """Align two segments using NW or WFA."""
+    """Align two segments using NW or WFA"""
     s1, s2 = seg1.sequence, seg2.sequence
     
     if len(s1) == 0 and len(s2) == 0:
@@ -82,7 +82,7 @@ def align_segments(seg1: Segment, seg2: Segment, use_wfa: bool = False, mismatch
 
 
 def align_gap(seq1: str, seq2: str, mum_from: Union[MUM, str, None], mum_to: Union[MUM, str, None], use_wfa: bool = False, mismatch: int = 4, gap_open: int = 6, gap_extend: int = 2) -> AlignmentResult:
-    """Align the gap between two MUMs."""
+    """Align the gap between two MUMs"""
     from_is_start = (mum_from == START or mum_from is None)
     to_is_end = (mum_to == END or mum_to is None)
     
@@ -94,7 +94,7 @@ def align_gap(seq1: str, seq2: str, mum_from: Union[MUM, str, None], mum_to: Uni
 
 
 def align_path(seq1: str, seq2: str, mum_path: List[MUM], use_wfa: bool = False, mismatch: int = 4, gap_open: int = 6, gap_extend: int = 2) -> Tuple[int, str, List[AlignmentResult], int]:
-    """Align all gaps along a path of MUMs. Returns (score, cigar, results, cells)."""
+    """Align all gaps along a path of MUMs. Returns (score, cigar, results, cells)"""
     if not mum_path:
         result = align_gap(seq1, seq2, START, END, use_wfa, mismatch, gap_open, gap_extend)
         return result.score, result.cigar, [result], result.cells_visited
@@ -111,12 +111,12 @@ def align_path(seq1: str, seq2: str, mum_path: List[MUM], use_wfa: bool = False,
     cigar_parts.append(f"{mum_path[0].length}M")
     
     for i in range(len(mum_path) - 1):
-        result = align_gap(seq1, seq2, mum_path[i], mum_path[i + 1], use_wfa, mismatch, gap_open, gap_extend)
+        result = align_gap(seq1, seq2, mum_path[i], mum_path[i+1], use_wfa, mismatch, gap_open, gap_extend)
         results.append(result)
         total_score += result.score
         if result.cigar:
             cigar_parts.append(result.cigar)
-        cigar_parts.append(f"{mum_path[i + 1].length}M")
+        cigar_parts.append(f"{mum_path[i+1].length}M")
     
     result = align_gap(seq1, seq2, mum_path[-1], END, use_wfa, mismatch, gap_open, gap_extend)
     results.append(result)
@@ -128,7 +128,7 @@ def align_path(seq1: str, seq2: str, mum_path: List[MUM], use_wfa: bool = False,
 
 
 def compare_algorithms(seq1: str, seq2: str, mum_path: List[MUM]) -> Dict[str, Any]:
-    """Compare NW and WFA search space reduction."""
+    """Compare NW and WFA search space reduction"""
     n, m = len(seq1), len(seq2)
     full_nw_cells = n * m
     

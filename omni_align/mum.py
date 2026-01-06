@@ -1,4 +1,4 @@
-"""MUM (Maximal Unique Match) extraction and transition utilities."""
+"""MUM (Maximal Unique Match) extraction and transition utilities"""
 
 from typing import List, Tuple, Dict
 from dataclasses import dataclass
@@ -15,7 +15,7 @@ END = "END"
 
 @dataclass
 class MUM:
-    """Maximal Unique Match between two sequences."""
+    """Maximal Unique Match between two sequences"""
     pos1: int
     pos2: int
     length: int
@@ -42,10 +42,10 @@ class MUM:
 
 def find_mums(seq1: str, seq2: str, min_length: int = 1) -> List[MUM]:
     """
-    Find all Maximal Unique Matches between two sequences.
+    Find all Maximal Unique Matches between two sequences
     
-    A MUM occurs exactly once in each sequence and cannot be extended.
-    Uses suffix array with LCP for O(n log n) construction.
+    A MUM occurs exactly once in each sequence and cannot be extended
+    Uses suffix array with LCP
     """
     if not seq1 or not seq2:
         return []
@@ -77,7 +77,7 @@ def find_mums(seq1: str, seq2: str, min_length: int = 1) -> List[MUM]:
     mums = []
     
     for i in range(1, n):
-        pos_i, pos_prev = sa[i], sa[i - 1]
+        pos_i, pos_prev = sa[i], sa[i-1]
         seq_i, seq_prev = which_seq(pos_i), which_seq(pos_prev)
         
         if seq_i == seq_prev or seq_i == 0 or seq_prev == 0:
@@ -87,8 +87,8 @@ def find_mums(seq1: str, seq2: str, min_length: int = 1) -> List[MUM]:
         if match_len < min_length:
             continue
         
-        lcp_before = lcp[i - 1] if i > 1 else 0
-        lcp_after = lcp[i + 1] if i + 1 < n else 0
+        lcp_before = lcp[i-1] if i > 1 else 0
+        lcp_after = lcp[i+1] if i + 1 < n else 0
         
         if lcp_before >= match_len or lcp_after >= match_len:
             continue
@@ -123,7 +123,7 @@ def find_mums(seq1: str, seq2: str, min_length: int = 1) -> List[MUM]:
 
 
 def can_transition(mum_i: MUM, mum_j: MUM) -> bool:
-    """Check if transition i -> j is valid (ordered and non-overlapping)."""
+    """Check if transition i -> j is valid (ordered and non-overlapping)"""
     if not (mum_i.pos1 < mum_j.pos1 and mum_i.pos2 < mum_j.pos2):
         return False
     if mum_i.end1 > mum_j.pos1 or mum_i.end2 > mum_j.pos2:
@@ -132,7 +132,7 @@ def can_transition(mum_i: MUM, mum_j: MUM) -> bool:
 
 
 class TransitionMatrix:
-    """MUM transition graph with START and END nodes."""
+    """MUM transition graph with START and END nodes"""
     
     def __init__(self, mums: List[MUM], seq1_len: int = 0, seq2_len: int = 0):
         self.mums = mums
@@ -196,6 +196,6 @@ class TransitionMatrix:
 
 
 def build_transition_matrix(seq1: str, seq2: str, min_length: int = 1) -> TransitionMatrix:
-    """Find MUMs and build transition matrix."""
+    """Find MUMs and build transition matrix"""
     mums = find_mums(seq1, seq2, min_length=min_length)
     return TransitionMatrix(mums, len(seq1), len(seq2))
